@@ -22,6 +22,9 @@ As tarefas podem estar em diferentes estados:
 ### Escalonador (Scheduler) e Task Switching
 O **Escalonador (Scheduler)** é a parte do kernel responsável por decidir qual tarefa no estado "Pronta" deve entrar no estado de "Execução", baseando-se na **prioridade** atribuída pelo desenvolvedor. 
 
+<p align="center">
+  <img src="../docs/imgs/task_intro.png" alt="Task States" width="450">
+</p>
 O processo de alternância entre tarefas é chamado de **Troca de Contexto (Context Switching)**. Quando ocorre:
 1.  O contexto da tarefa atual (registradores da CPU) é salvo em sua pilha.
 2.  O ponteiro de pilha do processador é alterado para a pilha da nova tarefa.
