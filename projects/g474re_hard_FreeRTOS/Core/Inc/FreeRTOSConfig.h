@@ -324,9 +324,9 @@ extern uint32_t SystemCoreClock;
 // ---------------------------------- NEW ------------------------------------------------
 /* Cortex-M specific definitions*/
 #ifdef __NVIC_PRIO_BITS
-	#define configPRIO_BITS		__NVIC_PRIO_BITS
+	#define configPRIO_BITS		__NVIC_PRIO_BITS
 #else
-	#define configPRIO_BITS		4
+	#define configPRIO_BITS		4
 #endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority"
@@ -392,7 +392,7 @@ PRIORITY THAN THIS! (higher priorities are lower numeric values. */
  * configCHECK_FOR_STACK_OVERFLOW is set to 1. See
  * https://www.freertos.org/Stacks-and-stack-overflow-checking.html  Defaults to
  * 0 if left undefined. */
-#define configCHECK_FOR_STACK_OVERFLOW        2
+#define configCHECK_FOR_STACK_OVERFLOW        0 // EDIT
 
 /******************************************************************************/
 /* Run time and task stats gathering related definitions. *********************/

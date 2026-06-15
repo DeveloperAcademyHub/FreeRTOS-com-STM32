@@ -21,6 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "FreeRTOS.h"
+#include "task.h"
 
 /* USER CODE END Includes */
 
@@ -42,7 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint32_t Cnt = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -54,7 +56,11 @@ static void MX_GPIO_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void MyTask(void *pvParams){
+	while (1){
+		Cnt++;
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -88,10 +94,17 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
+  xTaskCreate(MyTask, "MyTask", 256, NULL, 0, NULL);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  // Inicializando o FreeRTOS
+  vTaskStartScheduler();
+
+  /* Never reaches here */
   while (1)
   {
     /* USER CODE END WHILE */

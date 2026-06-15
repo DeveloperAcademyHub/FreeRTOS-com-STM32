@@ -137,22 +137,136 @@ Este arquivo é o cérebro da configuração do kernel.
           <img src="../docs/imgs/arm_interrupt_bits_1.png" alt="Conf" width="400">
         </p>
 
-  * `configKERNEL_INTERRUPT_PRIORITY`, `configMAX_SYSCALL_INTERRUPT_PRIORITY` e `configMAX_API_CALL_INTERRUPT_PRIORITY`: A primeira macro define a prioridade de interrupção usada pelo próprio kernel para o tick do sistema e para interrupções de troca de contexto. A segunda estabelece o nível máximo de prioridade a partir do qual as funções da API do FreeRTOS que terminam em "FromISR" podem ser chamadas com segurança. E a terceira macro é simplesmente um novo nome para `configMAX_SYSCALL_INTERRUPT_PRIORITY`, introduzido em versões e ports mais recentes do FreeRTOS.
-      * Defina essas macros da seguinte forma:
-        ~~~c
-        #define configKERNEL_INTERRUPT_PRIORITY          ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) ) 
+    * `configKERNEL_INTERRUPT_PRIORITY`, `configMAX_SYSCALL_INTERRUPT_PRIORITY` e `configMAX_API_CALL_INTERRUPT_PRIORITY`: A primeira macro define a prioridade de interrupção usada pelo próprio kernel para o tick do sistema e para interrupções de troca de contexto. A segunda estabelece o nível máximo de prioridade a partir do qual as funções da API do FreeRTOS que terminam em "FromISR" podem ser chamadas com segurança. E a terceira macro é simplesmente um novo nome para `configMAX_SYSCALL_INTERRUPT_PRIORITY`, introduzido em versões e ports mais recentes do FreeRTOS.
+        * Defina essas macros da seguinte forma:
+          ~~~c
+          #define configKERNEL_INTERRUPT_PRIORITY          ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) ) 
 
-        #define configMAX_SYSCALL_INTERRUPT_PRIORITY     ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) ) 
+          #define configMAX_SYSCALL_INTERRUPT_PRIORITY     ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) ) 
 
-        #define configMAX_API_CALL_INTERRUPT_PRIORITY    configMAX_SYSCALL_INTERRUPT_PRIORITY
-        ~~~
-
+          #define configMAX_API_CALL_INTERRUPT_PRIORITY    configMAX_SYSCALL_INTERRUPT_PRIORITY
+          ~~~
+    * `configCHECK_FOR_STACK_OVERFLOW`: Habilita ou desabilita mecanismos opcionais para detectar e depurar o estouro de pilha (*stack overflow*) nas tarefas. Deixe desabilitado da seguinte forma:
+      ~~~c
+      #define configCHECK_FOR_STACK_OVERFLOW        0
+      ~~~
 
 ### 6. Mapeamento de Interrupções
-O FreeRTOS precisa assumir o controle de três interrupções fundamentais do processador. No arquivo `stm32l4xx_it.c`, localize e chame os handlers do FreeRTOS dentro das funções de interrupção padrão:
+O FreeRTOS precisa assumir o controle de três interrupções fundamentais do processador. No arquivo `stm32xxxx_it.c` (para o STM32G4 seria o `stm32g4xx_it.c`), inclua:
 
-*   **SVC_Handler:** Chame `vPortSVCHandler()`.
-*   **PendSV_Handler:** Chame `xPortPendSVHandler()`.
-*   **SysTick_Handler:** Chame `xPortSysTickHandler()`.
+~~~c
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+#include "FreeRTOS.h"
+#include "portable.h"
+/* USER CODE END Includes */
+~~~
 
-Esses protótipos de funções de exceção estão localizados no arquivo `port.c` dentro da pasta da sua arquitetura em `/portable/GCC/`.
+Em `portable/GCC/ARM_CM4F` localize no arquivo `port.c` os protótipos das *exception handlers*:
+~~~c
+/*
+ * Exception handlers.
+ */
+void xPortPendSVHandler( void ) __attribute__( ( naked ) );
+void xPortSysTickHandler( void );
+void vPortSVCHandler( void ) __attribute__( ( naked ) );
+~~~
+
+Volte para o `stm32xxxx_it.c` e adicione as definições das *exception handlers* da seguinte forma:
+~~~c
+/* Private function prototypes -----------------------------------------------*/
+/* USER CODE BEGIN PFP */
+
+// Exception handlers.
+void xPortPendSVHandler( void );
+void xPortSysTickHandler( void );
+void vPortSVCHandler( void );
+
+/* USER CODE END PFP */
+~~~
+ Ainda no mesmo arquivo, localize e chame os handlers do FreeRTOS dentro das funções de interrupção padrão:
+
+*   Na função `SVC_Handler` chame a `vPortSVCHandler()`:
+    ~~~c
+    /**
+      * @brief This function handles System service call via SWI instruction.
+      */
+    void SVC_Handler(void)
+    {
+      /* USER CODE BEGIN SVCall_IRQn 0 */
+      vPortSVCHandler();
+
+      /* USER CODE END SVCall_IRQn 0 */
+      /* USER CODE BEGIN SVCall_IRQn 1 */
+
+      /* USER CODE END SVCall_IRQn 1 */
+    }
+    ~~~
+
+    O SVC (*Supervisor Call*) é uma exceção disparada por uma instrução de software. O `vPortSVCHandler` é usado pelo kernel para iniciar o escalonador e disparar a execução da primeira tarefa do sistema.
+
+*   Na função `PendSV_Handler` chame a `xPortPendSVHandler()`:
+    ~~~c
+    /**
+      * @brief This function handles Pendable request for system service.
+      */
+    void PendSV_Handler(void)
+    {
+      /* USER CODE BEGIN PendSV_IRQn 0 */
+      xPortPendSVHandler();
+
+      /* USER CODE END PendSV_IRQn 0 */
+      /* USER CODE BEGIN PendSV_IRQn 1 */
+
+      /* USER CODE END PendSV_IRQn 1 */
+    }
+    ~~~
+
+    O PendSV (*Pended Service Call*) é uma interrupção de hardware que pode ser "pendurada" ou adiada. O escalonador configura o PendSV com a prioridade mais baixa do hardware. Assim que todas as outras interrupções terminam, o `xPortPendSVHandler` é executado para salvar os registradores da tarefa atual na pilha dela e restaurar os registradores da próxima tarefa a ser executada.
+
+*   Na função `SysTick_Handler` chame `xPortSysTickHandler()`:
+    ~~~c
+    /**
+      * @brief This function handles System tick timer.
+      */
+    void SysTick_Handler(void)
+    {
+      /* USER CODE BEGIN SysTick_IRQn 0 */
+      xPortSysTickHandler();
+
+      /* USER CODE END SysTick_IRQn 0 */
+
+      /* USER CODE BEGIN SysTick_IRQn 1 */
+
+      /* USER CODE END SysTick_IRQn 1 */
+    }
+    ~~~
+
+    O SysTick é um temporizador interno do processador que gera interrupções periódicas. A cada interrupção do SysTick, o `xPortSysTickHandler()` é executado para: 
+    - Incrementar a contagem total de ticks do sistema;
+    - Verificar se alguma tarefa bloqueada por tempo (ex: via vTaskDelay) deve acordar;
+    - Decidir se é hora de realizar uma troca de contexto (time slicing) caso outras tarefas de mesma prioridade estejam prontas.
+
+### 7. Iniciando o FreeRTOS
+
+Na `main.c` do projeto co STM32Cube, inclua:
+~~~c
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+#include "FreeRTOS.h"
+#include "task.h"
+/* USER CODE END Includes */
+~~~
+
+E dentro da `int main(void)`, antes do `while (1)` chame:
+~~~c
+  // ...
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+
+  // Inicializando o FreeRTOS
+  vTaskStartScheduler();
+
+  /* Never reaches here */
+  while (1)
+~~~
