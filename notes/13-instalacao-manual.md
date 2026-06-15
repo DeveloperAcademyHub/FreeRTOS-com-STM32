@@ -140,11 +140,11 @@ Este arquivo é o cérebro da configuração do kernel.
     * `configKERNEL_INTERRUPT_PRIORITY`, `configMAX_SYSCALL_INTERRUPT_PRIORITY` e `configMAX_API_CALL_INTERRUPT_PRIORITY`: A primeira macro define a prioridade de interrupção usada pelo próprio kernel para o tick do sistema e para interrupções de troca de contexto. A segunda estabelece o nível máximo de prioridade a partir do qual as funções da API do FreeRTOS que terminam em "FromISR" podem ser chamadas com segurança. E a terceira macro é simplesmente um novo nome para `configMAX_SYSCALL_INTERRUPT_PRIORITY`, introduzido em versões e ports mais recentes do FreeRTOS.
         * Defina essas macros da seguinte forma:
           ~~~c
-          #define configKERNEL_INTERRUPT_PRIORITY          ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) ) 
+          #define configKERNEL_INTERRUPT_PRIORITY          ( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) ) 
 
           #define configMAX_SYSCALL_INTERRUPT_PRIORITY     ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) ) 
 
-          #define configMAX_API_CALL_INTERRUPT_PRIORITY    configMAX_SYSCALL_INTERRUPT_PRIORITY
+          #define configMAX_API_CALL_INTERRUPT_PRIORITY    0
           ~~~
     * `configCHECK_FOR_STACK_OVERFLOW`: Habilita ou desabilita mecanismos opcionais para detectar e depurar o estouro de pilha (*stack overflow*) nas tarefas. Deixe desabilitado da seguinte forma:
       ~~~c

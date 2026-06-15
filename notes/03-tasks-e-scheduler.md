@@ -39,6 +39,10 @@ Cada tarefa recebe uma prioridade no momento de sua criação, que pode ser alte
 *   **Escala:** As prioridades variam de **0 (mínima)** até **`configMAX_PRIORITIES - 1` (máxima)**.
 *   **Regra de Ouro:** O escalonador sempre garante que a tarefa de maior prioridade capaz de rodar seja aquela que recebe o tempo de processamento. Se uma tarefa de maior prioridade se torna "Pronta", ela **preempta** imediatamente uma tarefa de menor prioridade que esteja rodando.
 
+<p align="center">
+  <img src="../docs/imgs/task_prioridade.png" alt="Task States" width="550">
+</p>
+
 ## Idle Task e Hooks
 A **Tarefa Ociosa (Idle Task)** é criada automaticamente pelo kernel quando o escalonador é iniciado.
 *   **Função:** Garante que sempre haja pelo menos uma tarefa pronta para executar. Ela roda na prioridade mais baixa (0).
@@ -51,6 +55,14 @@ Cada tarefa possui sua própria pilha, usada para variáveis locais e armazename
 *   **Unidade:** O valor é especificado em **palavras (words)**, não em bytes. Por exemplo, em um STM32 (arquitetura de 32 bits), uma pilha de 100 palavras ocupará 400 bytes.
 *   **`configMINIMAL_STACK_SIZE`**: Define o tamanho mínimo recomendado para qualquer tarefa naquela arquitetura específica.
 *   **Monitoramento:** A função `uxTaskGetStackHighWaterMark()` pode ser usada para verificar o quão perto a tarefa chegou de estourar sua pilha, retornando o espaço mínimo restante desde o início da tarefa.
+
+## Exercícios do modulo:
+| Aula | Exercício |
+|:--:|:--|
+| 24 | [`s05_l1_g474re`](/projects/s05_l1_g474re/) |
+| 24 | [`s05_l2_g474re`](/projects/s05_l2_g474re/) |
+| 24 | [`s05_l3_g474re`](/projects/s05_l3_g474re/) |
+| 26 | [`s05_l4_g474re`](/projects/s05_l4_g474re/) |
 
 ## Referencias
 - [API References - Task Creation](https://www.freertos.org/Documentation/02-Kernel/04-API-references/01-Task-creation/01-xTaskCreate)
