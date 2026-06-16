@@ -45,8 +45,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint32_t Tack01Cnt = 0;
-uint32_t Tack02Cnt = 0;
+uint32_t Task01Cnt = 0;
+uint32_t Task02Cnt = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -60,13 +60,13 @@ static void MX_GPIO_Init(void);
 /* USER CODE BEGIN 0 */
 void Task01(void *pvParams){
 	while (1){
-		Tack01Cnt++;
+		Task01Cnt++;
 	}
 }
 
 void Task02(void *pvParams){
 	while (1){
-		Tack02Cnt++;
+		Task02Cnt++;
 	}
 }
 /* USER CODE END 0 */
