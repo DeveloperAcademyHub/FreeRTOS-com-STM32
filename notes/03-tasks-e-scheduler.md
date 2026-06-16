@@ -8,9 +8,9 @@ No FreeRTOS, uma aplicação é organizada como um conjunto de **tarefas indepen
 *   **Assinatura:** Devem seguir o protótipo `void vATaskFunction( void * pvParameters )`, retornando `void` e aceitando um ponteiro para `void` como parâmetro.
 *   **Estados:** Uma tarefa pode estar em um de quatro estados principais: **Execução (Running)**, **Pronta (Ready)**, **Bloqueada (Blocked)** ou **Suspensa (Suspended)**. Quando uma tarefa é criada, ela entra inicialmente no estado "Pronta".
 
-<p align="center">
-  <img src="../docs/imgs/task_states.png" alt="Task States" width="450">
-</p>
+    <p align="center">
+      <img src="../docs/imgs/task_states.png" alt="Task States" width="450">
+    </p>
 
 ## Escalonador (Scheduler) e Task Switching
 O **Escalonador** é o componente do kernel responsável por decidir qual tarefa no estado "Pronta" deve entrar no estado de "Execução".
@@ -40,15 +40,37 @@ Cada tarefa recebe uma prioridade no momento de sua criação, que pode ser alte
 *   **Escala:** As prioridades variam de **0 (mínima)** até **`configMAX_PRIORITIES - 1` (máxima)**.
 *   **Regra de Ouro:** O escalonador sempre garante que a tarefa de maior prioridade capaz de rodar seja aquela que recebe o tempo de processamento. Se uma tarefa de maior prioridade se torna "Pronta", ela **preempta** imediatamente uma tarefa de menor prioridade que esteja rodando.
 
-<p align="center">
-  <img src="../docs/imgs/task_prioridade.png" alt="Task States" width="550">
-</p>
+    <p align="center">
+      <img src="../docs/imgs/task_prioridade.png" alt="Task States" width="550">
+    </p>
 
 ## Idle Task e Hooks
-A **Tarefa Ociosa (Idle Task)** é criada automaticamente pelo kernel quando o escalonador é iniciado.
-*   **Função:** Garante que sempre haja pelo menos uma tarefa pronta para executar. Ela roda na prioridade mais baixa (0).
-*   **Responsabilidade:** É encarregada de liberar a memória de tarefas que foram deletadas.
+A **Tarefa Ociosa (Idle Task)** é criada automaticamente pelo kernel quando o escalonador é iniciado. Garante que sempre haja pelo menos uma tarefa pronta para executar. Ela roda na prioridade mais baixa (0) e é encarregada de liberar a memória de tarefas que foram deletadas.
+
 *   **Idle Hook:** É uma função de *callback* opcional (`vApplicationIdleHook`) que o desenvolvedor pode definir para ser executada em cada iteração da Idle Task. É ideal para colocar o processador em modo de **baixo consumo** ou executar processamentos de fundo muito leves.
+
+    <p align="center">
+      <img src="../docs/imgs/ex_idle_task_low_power.png" alt="Task States" width="450">
+    </p>
+
+* **Nota:** Não é recomentado, mas caso queira implementar uma outra tarefa com prioridade Idle (0), é importante que em `FreeRTOSConfig.h` a macro `configIDLE_SHOULD_YIELD` esteja definida como `1`. 
+
+* As seguintes macro referem-se a ***hooks*** (ganchos), que permitem ao desenvolvedor inserir códigos personalizados em eventos específicos do kernel. Quando qualquer uma delas é definida como 1, o programador é responsável por fornecer a implementação da função correspondente.
+
+  *   **`configUSE_IDLE_HOOK`**: Define se a função de gancho da tarefa ociosa (`vApplicationIdleHook`) será utilizada. Quando habilitada, esta função é chamada repetidamente em cada iteração da *Idle Task*.
+  
+  *   **`configUSE_TICK_HOOK`**: Habilita a função de gancho de interrupção de tick (`vApplicationTickHook`). Esta função é chamada pelo kernel durante cada **interrupção de tick** do sistema. Por ser executada dentro do contexto de uma interrupção de hardware, ela deve ser extremamente curta, usar pouca pilha e chamar apenas funções da API do FreeRTOS que terminam com "FromISR".
+
+  *   **`configUSE_MALLOC_FAILED_HOOK`**: Ativa o gancho para falhas na alocação de memória (`vApplicationMallocFailedHook`). Esta função é disparada automaticamente se a função `pvPortMalloc()` (usada internamente pelo kernel ao criar tarefas, filas ou semáforos) retornar `NULL` devido à falta de memória no *heap*. É essencial para depuração e para notificar o desenvolvedor sobre o esgotamento de recursos de memória RAM.
+
+  *   **`configUSE_DAEMON_TASK_STARTUP_HOOK`**: Quando esta macro e a `configUSE_TIMERS` estão ambas em 1, o kernel chamará a função `vApplicationDaemonTaskStartupHook` exatamente **uma única vez**. Isso ocorre quando a tarefa de serviço de timers (*Daemon Task*) começa a ser executada pela primeira vez. É o local apropriado para colocar códigos de inicialização que dependem do RTOS já estar em funcionamento.
+
+  * **`configCHECK_FOR_STACK_OVERFLOW`**: Usada para habilitar mecanismos opcionais que auxiliam na detecção e depuração de estouros de pilha (*stack overflows*). Se a macro for definida como 1 ou 2, o desenvolvedor deve fornecer uma função de gancho chamada `vApplicationStackOverflowHook`. A configuração desta macro funciona através de diferentes métodos:
+
+    *   **Valor 0 (Desabilitado):** O kernel não realiza nenhuma verificação de estouro de pilha. Este valor é frequentemente usado em versões finais de produção para economizar tempo de processamento, já que a verificação aumenta o tempo necessário para realizar uma troca de contexto.
+    *   **Valor 1 (Método 1):** O kernel verifica se o **ponteiro de pilha** (*stack pointer*) permanece dentro dos limites válidos no momento em que o contexto da tarefa é salvo durante uma troca de contexto. É um método rápido, mas pode não capturar estouros que ocorrem entre as trocas de contexto.
+    *   **Valor 2 (Método 2):** Realiza as mesmas verificações do Método 1 e adicionalmente verifica se um **padrão conhecido** (gravado no final da pilha quando a tarefa foi criada) foi sobrescrito. Ele testa os últimos 20 bytes da pilha. Embora seja um pouco mais lento que o Método 1, é mais eficaz na detecção.
+    *   **Valor 3 (Método 3):** Disponível apenas em alguns portes específicos, habilita a verificação da pilha de interrupções. Se um estouro for detectado, um *assert* é disparado em vez de chamar a função de gancho (*hook*).
 
 ## Stack Size
 Cada tarefa possui sua própria pilha, usada para variáveis locais e armazenamento de contexto.
@@ -58,11 +80,11 @@ Cada tarefa possui sua própria pilha, usada para variáveis locais e armazename
 *   **Monitoramento:** A função `uxTaskGetStackHighWaterMark()` pode ser usada para verificar o quão perto a tarefa chegou de estourar sua pilha, retornando o espaço mínimo restante desde o início da tarefa.
 
 ## Exercícios do modulo:
-| Aula | Exercício |
+| Aula | Exercícios |
 |:--:|:--|
 | 24 | [`s05_l1_g474re`](/projects/s05_l1_g474re/) , [`s05_l2_g474re`](/projects/s05_l2_g474re/) e [`s05_l3_g474re`](/projects/s05_l3_g474re/).|
 | 26 | [`s05_l4_g474re`](/projects/s05_l4_g474re/) |
-| 28 | [`s05_l5_g474re`](/projects/s05_l5_g474re/),  [`s05_l6_g474re`](/projects/s05_l6_g474re/)|
+| 28 | [`s05_l5_g474re`](/projects/s05_l5_g474re/),  [`s05_l6_g474re`](/projects/s05_l6_g474re/) e [`s05_l7_g474re`](/projects/s05_l7_g474re/)|
 
 ## Referencias
 - [API References - Task Creation](https://www.freertos.org/Documentation/02-Kernel/04-API-references/01-Task-creation/01-xTaskCreate)
