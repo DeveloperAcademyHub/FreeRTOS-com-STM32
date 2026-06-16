@@ -31,6 +31,7 @@ As principais funções para gerenciar o ciclo de vida das tarefas incluem:
 *   **`vTaskDelete()`**: Remove uma instância de tarefa do kernel, libera os recursos alocados internamente pelo kernel (TCB e pilha) e encerra sua execução.
 *   **`vTaskDelay()`**: Coloca a tarefa no estado **"Bloqueado"** por um número específico de *ticks* a partir do momento em que a função foi chamada, liberando o processador para outras tarefas.
 *   **`vTaskDelayUntil()`**: Coloca a tarefa no estado **"Bloqueado"** até que um tempo **absoluto** seja atingido. Diferente da `vTaskDelay()`, que é relativa ao momento da chamada, esta função é utilizada para garantir uma **frequência de execução constante**, pois calcula o próximo tempo de desbloqueio com base em um ponto de referência anterior.
+*   **`xTaskAbortDelay()`**: Ela força uma tarefa a sair do estado Bloqueado (Blocked) e entrar no estado Pronto (Ready), mesmo que o evento pelo qual a tarefa estava esperando não tenha ocorrido ou o tempo de atraso (timeout) especificado ainda não tenha expirado.
 *   **`vTaskSuspend()`**: Coloca uma tarefa no estado **"Suspenso"**. Uma tarefa suspensa torna-se indisponível para o escalonador e nunca entrará no estado de "Execução" até que seja explicitamente retomada. Uma tarefa pode suspender a si mesma passando `NULL` como handle.
 *   **`vTaskResume()`**: Faz a transição de uma tarefa do estado **"Suspenso"** de volta para o estado **"Pronto"**. Esta função é o único meio (junto com sua versão para interrupções) de tirar uma tarefa do estado suspenso, permitindo que ela volte a ser considerada pelo escalonador para execução.
 
@@ -59,10 +60,9 @@ Cada tarefa possui sua própria pilha, usada para variáveis locais e armazename
 ## Exercícios do modulo:
 | Aula | Exercício |
 |:--:|:--|
-| 24 | [`s05_l1_g474re`](/projects/s05_l1_g474re/) |
-| 24 | [`s05_l2_g474re`](/projects/s05_l2_g474re/) |
-| 24 | [`s05_l3_g474re`](/projects/s05_l3_g474re/) |
+| 24 | [`s05_l1_g474re`](/projects/s05_l1_g474re/) , [`s05_l2_g474re`](/projects/s05_l2_g474re/) e [`s05_l3_g474re`](/projects/s05_l3_g474re/).|
 | 26 | [`s05_l4_g474re`](/projects/s05_l4_g474re/) |
+| 28 | [`s05_l5_g474re`](/projects/s05_l5_g474re/) |
 
 ## Referencias
 - [API References - Task Creation](https://www.freertos.org/Documentation/02-Kernel/04-API-references/01-Task-creation/01-xTaskCreate)

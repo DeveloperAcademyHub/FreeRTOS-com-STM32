@@ -114,6 +114,11 @@ Este arquivo é o cérebro da configuração do kernel.
 
     *   **`configCHECK_HANDLER_INSTALLATION`**: Habilita verificações internas (asserts) para validar se os manipuladores de interrupção do FreeRTOS (como `vPortSVCHandler` e `xPortPendSVHandler`) foram instalados corretamente no microcontrolador.
         * Defina essa macro como `0` para ser utiliza "Roteamento Indireto" de interrupções, ou seja, quando o desenvolvedor mapeia manualmente as funções no arquivo de interrupções (`stm32xxxx_it.c`) em vez de deixar o kernel assumir o 
+        * Ou defina essa macro como `1` e em `System Core > NVIC` no STM32CubeMX desabilite:
+
+          <p align="center">
+            <img src="../docs/imgs/config_nvic.png" alt="Conf" width="600">
+          </p>
 
     *   **`configPRIO_BITS`**: Irá especifica o número de bits que o hardware do microcontrolador (NVIC) utiliza para representar os níveis de prioridade de interrupção.
         * Crie a macro `configPRIO_BITS` da seguinte forma:
@@ -152,7 +157,18 @@ Este arquivo é o cérebro da configuração do kernel.
       ~~~
 
 ### 6. Mapeamento de Interrupções
-O FreeRTOS precisa assumir o controle de três interrupções fundamentais do processador. No arquivo `stm32xxxx_it.c` (para o STM32G4 seria o `stm32g4xx_it.c`), inclua:
+O FreeRTOS precisa assumir o controle de três interrupções fundamentais do processador. Caso tenha habilitado o `configCHECK_HANDLER_INSTALLATION`, em `FreeRTOSConfig.h` defina as macro:
+
+~~~c
+// ...
+#define configCHECK_HANDLER_INSTALLATION    1
+
+#define vPortSVCHandler                     SVC_Handler
+#define xPortPendSVHandler                  PendSV_Handler
+#define xPortSysTickHandler			        SysTick_Handler
+~~~
+
+Caso tenha optado pelo mapeamento indireto (`configCHECK_HANDLER_INSTALLATION` definido como `0`), vá no arquivo `stm32xxxx_it.c` (para o STM32G4 seria o `stm32g4xx_it.c`), inclua:
 
 ~~~c
 /* Private includes ----------------------------------------------------------*/
