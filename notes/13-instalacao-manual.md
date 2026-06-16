@@ -174,6 +174,7 @@ Caso tenha optado pelo mapeamento indireto (`configCHECK_HANDLER_INSTALLATION` d
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "FreeRTOS.h"
+#include "task.h"
 #include "portable.h"
 /* USER CODE END Includes */
 ~~~
@@ -248,7 +249,9 @@ void vPortSVCHandler( void );
     void SysTick_Handler(void)
     {
       /* USER CODE BEGIN SysTick_IRQn 0 */
-      xPortSysTickHandler();
+      if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED){
+		    xPortSysTickHandler();
+	    }
 
       /* USER CODE END SysTick_IRQn 0 */
 
