@@ -62,7 +62,7 @@ Cada tarefa possui sua própria pilha, usada para variáveis locais e armazename
 |:--:|:--|
 | 24 | [`s05_l1_g474re`](/projects/s05_l1_g474re/) , [`s05_l2_g474re`](/projects/s05_l2_g474re/) e [`s05_l3_g474re`](/projects/s05_l3_g474re/).|
 | 26 | [`s05_l4_g474re`](/projects/s05_l4_g474re/) |
-| 28 | [`s05_l5_g474re`](/projects/s05_l5_g474re/) |
+| 28 | [`s05_l5_g474re`](/projects/s05_l5_g474re/),  [`s05_l6_g474re`](/projects/s05_l6_g474re/)|
 
 ## Referencias
 - [API References - Task Creation](https://www.freertos.org/Documentation/02-Kernel/04-API-references/01-Task-creation/01-xTaskCreate)
