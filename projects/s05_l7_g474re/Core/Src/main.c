@@ -60,16 +60,18 @@ static void MX_GPIO_Init(void);
 /* Hardware realted functions */
 void LedLD2Toggle(){
 	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-	HAL_Delay(100); // em ms
+	HAL_Delay(10);
 }
 
 /* Tasks */
 void TaskLedLD2(void *pvParams){
-	const TickType_t xDelay500Ms = pdMS_TO_TICKS(500); // converte de ms p/ ticks
+	const TickType_t xDelay100Ms = pdMS_TO_TICKS(100); // converte de ms p/ ticks
+	TickType_t xAtualTick = xTaskGetTickCount();
 
 	while (1){
 		LedLD2Toggle();
-		vTaskDelay(xDelay500Ms); // em ticks
+		xTaskDelayUntil(&xAtualTick, xDelay100Ms);
+
 	}
 }
 
