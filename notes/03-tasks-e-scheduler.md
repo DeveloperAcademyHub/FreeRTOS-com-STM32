@@ -85,8 +85,11 @@ Cada tarefa possui sua própria pilha, usada para variáveis locais e armazename
 | 24 | [`s05_l1_g474re`](/projects/s05_l1_g474re/) , [`s05_l2_g474re`](/projects/s05_l2_g474re/) e [`s05_l3_g474re`](/projects/s05_l3_g474re/).|
 | 26 | [`s05_l4_g474re`](/projects/s05_l4_g474re/) |
 | 28 | [`s05_l5_g474re`](/projects/s05_l5_g474re/),  [`s05_l6_g474re`](/projects/s05_l6_g474re/) e [`s05_l7_g474re`](/projects/s05_l7_g474re/)|
+| 30 | [`s05_l8_g474re`](/projects/s05_l8_g474re/), [`s05_l9_g474re`](/projects/s05_l9_g474re/) |
+
 
 ## Referencias
 - [API References - Task Creation](https://www.freertos.org/Documentation/02-Kernel/04-API-references/01-Task-creation/01-xTaskCreate)
 - [API References - Task Control](https://www.freertos.org/Documentation/02-Kernel/04-API-references/02-Task-control/00-Task-control)
 - [API References - Task Utilities](https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/00-Task-utilities)
+- [Kernel features - Hook Functions](https://www.freertos.org/Documentation/02-Kernel/02-Kernel-features/12-Hook-functions#idle-hook-function/)
