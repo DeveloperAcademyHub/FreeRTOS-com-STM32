@@ -664,7 +664,11 @@ PRIORITY THAN THIS! (higher priorities are lower numeric values. */
  * configCHECK_HANDLER_INSTALLATION to 0.
  *
  * Defaults to 1 if left undefined. */
-#define configCHECK_HANDLER_INSTALLATION    0
+#define configCHECK_HANDLER_INSTALLATION    1
+
+#define vPortSVCHandler						SVC_Handler
+#define xPortPendSVHandler					PendSV_Handler
+#define xPortSysTickHandler			        SysTick_Handler
 
 /******************************************************************************/
 /* Definitions that include or exclude functionality. *************************/
