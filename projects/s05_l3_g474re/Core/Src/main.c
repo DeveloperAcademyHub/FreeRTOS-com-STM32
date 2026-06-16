@@ -143,7 +143,7 @@ xReturn = xTaskCreate(TaskGeneric,
   /* USER CODE BEGIN WHILE */
 
   // Inicializando o FreeRTOS
-  xPortStartScheduler();
+  vTaskStartScheduler();
 
   /* Never reaches here */
   while (1)

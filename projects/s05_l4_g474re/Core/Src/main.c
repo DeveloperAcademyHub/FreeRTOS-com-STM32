@@ -144,8 +144,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   // Inicializando o FreeRTOS
-  xPortStartScheduler();
-//  vTaskStartScheduler();
+  vTaskStartScheduler();
 
   /* Never reaches here */
   while (1)
