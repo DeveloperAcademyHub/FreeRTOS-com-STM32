@@ -69,7 +69,7 @@ void TaskGeneric(void *pvParams){
 
 	while (1){
 		(*genericCnt)++;
-//		vTaskDelay(xDelay10Ms); // em ticks
+		vTaskDelay(xDelay10Ms); // em ticks
 	}
 }
 
