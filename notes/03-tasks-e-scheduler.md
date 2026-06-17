@@ -74,10 +74,27 @@ A **Tarefa Ociosa (Idle Task)** é criada automaticamente pelo kernel quando o e
 
 ## Stack Size
 Cada tarefa possui sua própria pilha, usada para variáveis locais e armazenamento de contexto.
+
+  <p align="center">
+    <img src="../docs/imgs/stack_size_exemplo.png" alt="Task States" width="450">
+  </p>
+
 *   **Definição:** Ao criar uma tarefa, o parâmetro `usStackDepth` define o tamanho da pilha.
 *   **Unidade:** O valor é especificado em **palavras (words)**, não em bytes. Por exemplo, em um STM32 (arquitetura de 32 bits), uma pilha de 100 palavras ocupará 400 bytes.
 *   **`configMINIMAL_STACK_SIZE`**: Define o tamanho mínimo recomendado para qualquer tarefa naquela arquitetura específica.
-*   **Monitoramento:** A função `uxTaskGetStackHighWaterMark()` pode ser usada para verificar o quão perto a tarefa chegou de estourar sua pilha, retornando o espaço mínimo restante desde o início da tarefa.
+*   **Monitoramento:** A função `uxTaskGetStackHighWaterMark()` pode ser usada para verificar o quão perto a tarefa chegou de estourar sua pilha, retornando o espaço mínimo restante desde o início da tarefa. Para utiliza-lá, a macro `INCLUDE_uxTaskGetStackHighWaterMark` ser definida como `1` no arquivo `FreeRTOSConfig.h`. No STM32CubeIDE, o debug pode ser configurado da seguinte forma: 
+
+  <p align="center">
+    <img src="../docs/imgs/debug_rtos_no_stm32cubeide_01.png" alt="Task States" width="400">
+    <img src="../docs/imgs/debug_rtos_no_stm32cubeide_02.png" alt="Task States" width="850">
+  </p>
+
+* No STM32CubeIDE, o **Static Stack Analyzer** é uma ferramenta que estima o uso máximo de pilha (stack) de uma aplicação por meio de análise estática do código, sem precisar executar o programa. Ela percorre a cadeia de chamadas de funções (call graph) e calcula quanto de stack cada função consome, somando esse consumo ao longo dos caminhos de execução possíveis.
+
+<p align="center">
+    <img src="../docs/imgs/static_stack_analyzer_no_stm32cubeide.png" alt="Task States" width="450">
+  </p>
+
 
 ## Exercícios do modulo:
 | Aula | Exercícios |
@@ -85,11 +102,12 @@ Cada tarefa possui sua própria pilha, usada para variáveis locais e armazename
 | 24 | [`s05_l1_g474re`](/projects/s05_l1_g474re/) , [`s05_l2_g474re`](/projects/s05_l2_g474re/) e [`s05_l3_g474re`](/projects/s05_l3_g474re/).|
 | 26 | [`s05_l4_g474re`](/projects/s05_l4_g474re/) |
 | 28 | [`s05_l5_g474re`](/projects/s05_l5_g474re/),  [`s05_l6_g474re`](/projects/s05_l6_g474re/) e [`s05_l7_g474re`](/projects/s05_l7_g474re/)|
-| 30 | [`s05_l8_g474re`](/projects/s05_l8_g474re/), [`s05_l9_g474re`](/projects/s05_l9_g474re/) |
+| 30 | [`s05_l8_g474re`](/projects/s05_l8_g474re/), [`s05_l9_g474re`](/projects/s05_l9_g474re/) e [`s05_l10_g474re`](/projects/s05_l10_g474re/)|
 
 
 ## Referencias
-- [API References - Task Creation](https://www.freertos.org/Documentation/02-Kernel/04-API-references/01-Task-creation/01-xTaskCreate)
-- [API References - Task Control](https://www.freertos.org/Documentation/02-Kernel/04-API-references/02-Task-control/00-Task-control)
-- [API References - Task Utilities](https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/00-Task-utilities)
-- [Kernel features - Hook Functions](https://www.freertos.org/Documentation/02-Kernel/02-Kernel-features/12-Hook-functions#idle-hook-function/)
+- [Task Creation](https://www.freertos.org/Documentation/02-Kernel/04-API-references/01-Task-creation/01-xTaskCreate)
+- [Task Control](https://www.freertos.org/Documentation/02-Kernel/04-API-references/02-Task-control/00-Task-control)
+- [Task Utilities](https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/00-Task-utilities)
+- [Hook Functions](https://www.freertos.org/Documentation/02-Kernel/02-Kernel-features/12-Hook-functions#idle-hook-function/)
+- [ FreeRTOS stack usage and stack overflow checking](https://www.freertos.org/Documentation/02-Kernel/02-Kernel-features/09-Memory-management/02-Stack-usage-and-stack-overflow-checking)
