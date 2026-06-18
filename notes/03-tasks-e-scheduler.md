@@ -91,8 +91,12 @@ Cada tarefa possui sua própria pilha, usada para variáveis locais e armazename
 
 * No STM32CubeIDE, o **Static Stack Analyzer** é uma ferramenta que estima o uso máximo de pilha (stack) de uma aplicação por meio de análise estática do código, sem precisar executar o programa. Ela percorre a cadeia de chamadas de funções (call graph) e calcula quanto de stack cada função consome, somando esse consumo ao longo dos caminhos de execução possíveis.
 
-<p align="center">
+  <p align="center">
     <img src="../docs/imgs/static_stack_analyzer_no_stm32cubeide.png" alt="Task States" width="450">
+  </p>
+
+  <p align="center">
+    <img src="../docs/imgs/debug_rtos_no_stm32cubeide_03.png" alt="Task States" width="850">
   </p>
 
 

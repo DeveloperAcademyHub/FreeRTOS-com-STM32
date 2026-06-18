@@ -115,7 +115,7 @@ int main(void)
 	TaskHandle_t TaskHandle01;
 	BaseType_t xReturn;
 
-	BaseType_t uxStackDepth = (128 + 544) / sizeof(BaseType_t); // em words
+	BaseType_t uxStackDepth = (128 + 544 - 88) / sizeof(BaseType_t); // em words
 
   /* USER CODE END 1 */
 
