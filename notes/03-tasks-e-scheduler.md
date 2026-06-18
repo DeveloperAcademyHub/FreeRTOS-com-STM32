@@ -17,7 +17,7 @@ O **Escalonador** é o componente do kernel responsável por decidir qual tarefa
 *   **Política de Escalonamento:** Por padrão, o FreeRTOS utiliza um algoritmo **preemptivo por prioridade com compartilhamento de tempo (time slicing)**. Isso significa que a tarefa de maior prioridade sempre terá preferência, e tarefas de mesma prioridade dividirão o tempo de CPU.
 *   **Troca de Contexto (Task Switching):** Quando o escalonador decide trocar a tarefa ativa, ocorre o "chaveamento de contexto". O contexto da tarefa atual (registradores da CPU) é salvo em sua própria pilha, e o contexto da nova tarefa é restaurado a partir da pilha dela, permitindo que a execução continue exatamente de onde parou.
 
-## 3. API de Task
+## API de Task
 
 Para ter acesso as rotinas das tasks do FreeRTOS é necessários incluir no arquivo de *header*:
 ~~~c
