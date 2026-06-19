@@ -59,6 +59,7 @@ Muitas funções da API do FreeRTOS realizam ações não permitidas dentro de u
 | Aula | Exercícios |
 |:--:|:--|
 | 36 | [`s06_l1_g474re`](/projects/s06_l1_g474re/) |
+| 37 | [`s06_l2_g474re`](/projects/s06_l2_g474re/) |
 
 ## Referencias
 - [Queue Management](https://freertos.org/Documentation/02-Kernel/04-API-references/06-Queues/00-QueueManagement)
