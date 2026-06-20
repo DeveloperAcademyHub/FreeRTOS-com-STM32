@@ -37,14 +37,15 @@ As principais funções para manipular filas incluem:
 
 ## Conjuntos de Filas (Queue Sets)
 
-Os **Queue Sets** permitem que uma tarefa bloqueie simultaneamente em múltiplas filas ou semáforos.
+As **Queue Sets** permitem a uma tarefa bloquear e aguardar eventos de múltiplas filas (queues) ou semáforos simultaneamente.
 
 *   **Uso:** É útil quando uma tarefa deve processar eventos de diferentes fontes que não podem ser unificadas em uma única fila.
 *   **Configuração:** Deve-se definir `configUSE_QUEUE_SETS` como 1 no `FreeRTOSConfig.h`.
 *   **Fluxo de Operação:**
     1.  Cria-se o conjunto com **`xQueueCreateSet()`**.
-    2.  Adiciona-se as filas ou semáforos (que devem estar vazios) via **`xQueueAddToSet()`**.
-    3.  A tarefa chama **`xQueueSelectFromSet()`**, que retorna o *handle* da fila ou semáforo que contém dados prontos para leitura.
+    2.  Adiciona-se as filas ou semáforos (que devem estar vazios) nas *QueueSets* via **`xQueueAddToSet()`**.
+    3. Remove-se filas ou semáforos das *QueueSets* com **`xQueueRemoveFromSet()`**.
+    4.  A tarefa chama **`xQueueSelectFromSet()`**, que retorna o *handle* da fila ou semáforo que contém dados prontos para leitura.
 
 ## ISRs e Funções `_FromISR()`
 
@@ -61,6 +62,7 @@ Muitas funções da API do FreeRTOS realizam ações não permitidas dentro de u
 | 36 | [`s06_l1_g474re`](/projects/s06_l1_g474re/) |
 | 37 | [`s06_l2_g474re`](/projects/s06_l2_g474re/) |
 | 38 | [`s06_l3_g474re`](/projects/s06_l3_g474re/) e [`s06_l4_g474re`](/projects/s06_l4_g474re/)  |
+| 41 | [`s06_l5_g474re`](/projects/s06_l5_g474re/) |
 
 ## Referencias
 - [Queue Management](https://freertos.org/Documentation/02-Kernel/04-API-references/06-Queues/00-QueueManagement)
