@@ -51,10 +51,28 @@ As **Queue Sets** permitem a uma tarefa bloquear e aguardar eventos de múltipla
 
 Muitas funções da API do FreeRTOS realizam ações não permitidas dentro de uma **Rotina de Serviço de Interrupção (ISR)**, como colocar uma tarefa no estado Bloqueado. Por isso, o FreeRTOS fornece versões específicas para uso em interrupções, identificadas pelo sufixo **`FromISR`**.
 
+<p align="center">
+    <img src="../docs/imgs/task_from_isr01.png" alt="Task States" width="450">
+</p>
+
 *   **Segurança em Interrupções:** Nunca chame uma função que não termine em `FromISR` de dentro de uma ISR.
 *   **`pxHigherPriorityTaskWoken`:** Quase todas as funções `FromISR` possuem este parâmetro ponteiro. Se a chamada da função fizer com que uma tarefa de maior prioridade saia do estado Bloqueado, o kernel definirá esse valor como `pdTRUE`.
-*   **Troca de Contexto Determinística:** Se o valor retornado for `pdTRUE`, o desenvolvedor deve solicitar uma troca de contexto antes de sair da ISR usando a macro **`portYIELD_FROM_ISR()`** (ou `portEND_SWITCHING_ISR()`). Isso garante que a interrupção retorne diretamente para a tarefa de maior prioridade agora pronta.
+*   **Troca de Contexto Determinística:** Se o valor retornado for `pdTRUE`, o desenvolvedor deve solicitar uma troca de contexto antes de sair da ISR usando a **`portYIELD_FROM_ISR()`** (ou `portEND_SWITCHING_ISR()` ou `taskYIELD()`). Isso garante que a interrupção retorne diretamente para a tarefa de maior prioridade agora pronta.
 *   **Exemplos Comuns:** `xQueueSendToBackFromISR()`, `xQueueReceiveFromISR()` e `xQueueIsQueueEmptyFromISR()`.
+
+    ~~~c
+    void ISR(){
+        BaseType_t pxHigherPriorityTaskWoken = pdFALSE;
+        // ...
+        ...FromISR(... , &pxHigherPriorityTaskWoken);
+        // ...
+        if(pxHigherPriorityTaskWoken == pdTRUE){
+            portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+        }
+    }
+    ~~~
+
+* **Nota:** Se for usar chamadas do FreeRTOS em uma ISR, é necessario limitar a prioridade da ISR para valores menores  ou iguais ao definido pela macro `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY`. 
 
 ## Exercícios do modulo:
 | Aula | Exercícios |
@@ -63,6 +81,7 @@ Muitas funções da API do FreeRTOS realizam ações não permitidas dentro de u
 | 37 | [`s06_l2_g474re`](/projects/s06_l2_g474re/) |
 | 38 | [`s06_l3_g474re`](/projects/s06_l3_g474re/) e [`s06_l4_g474re`](/projects/s06_l4_g474re/)  |
 | 41 | [`s06_l5_g474re`](/projects/s06_l5_g474re/) |
+| 42 | [`s06_l6_g474re`](/projects/s06_l6_g474re/) |
 
 ## Referencias
 - [Queue Management](https://freertos.org/Documentation/02-Kernel/04-API-references/06-Queues/00-QueueManagement)
