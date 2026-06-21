@@ -220,7 +220,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	TaskHandle_t TaskHandle01, TaskHandle02, TaskHandle03;
+	TaskHandle_t TaskHandle01, TaskHandle02, TaskHandle03, TaskHandle04;
 	BaseType_t xReturn;
 	BaseType_t uxStackDepth = 128; // em words
 
@@ -288,7 +288,7 @@ int main(void)
 			uxStackDepth,
 			NULL,
 			1,
-			&TaskHandle03);
+			&TaskHandle04);
 
   if (xReturn != pdPASS){
 	 Error_Handler();
