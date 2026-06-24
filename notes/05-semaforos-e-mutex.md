@@ -49,6 +49,8 @@ Os mutexes utilizam funções específicas para garantir a herança de prioridad
 *   **Monitoramento:**
     *   **`xSemaphoreGetMutexHolder()`**: Retorna o *handle* da tarefa que detém o mutex no momento. Requer a definição de `INCLUDE_xSemaphoreGetMutexHolder` como 1 no `FreeRTOSConfig.h`.
 
+* **Nota**: Para habilitar o uso do mutex, em `FreeRTOSConfig.h` a macro `configUSE_MUTEXES` deve está definida como `1`.
+
 **Dica de Segurança:** Mutexes **não devem ser usados** dentro de rotinas de serviço de interrupção (ISRs), pois eles envolvem mecanismos de herança de prioridade que só fazem sentido entre tarefas. Além disso, um mutex obtido para exclusão mútua **deve sempre ser devolvido** pela tarefa, caso contrário, o recurso ficará bloqueado para sempre.
 
 ## Exercícios do modulo:
@@ -56,6 +58,7 @@ Os mutexes utilizam funções específicas para garantir a herança de prioridad
 |:--:|:--|
 | 46 | [`s07_l1_g474re`](/projects/s07_l1_g474re/) |
 | 49 | [`s07_l2_g474re`](/projects/s07_l2_g474re/) |
+| 51 | [`s07_l3_g474re`](/projects/s07_l3_g474re/) |
 
 ## Referencias
 - [Semaphore and Mutexes](https://www.freertos.org/Documentation/02-Kernel/04-API-references/10-Semaphore-and-Mutexes/00-Semaphores)
